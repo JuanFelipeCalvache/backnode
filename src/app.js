@@ -17,5 +17,7 @@ app.use(express.json());
 // Rutas
 app.post('/usuarios', userController.guardarUsuario);
 app.get('/usuarios', userController.obtenerUsuarios);
+app.post('/loginUser', userController.loginUsuario);
+app.delete('/usuarios/:id', userController.deleteUser); // Eliminar usuario por ID
 
 module.exports = app;
