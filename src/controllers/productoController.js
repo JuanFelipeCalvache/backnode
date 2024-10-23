@@ -66,8 +66,14 @@ async function obtenerProductoPorId(req, res) {
 
 // Actualizar un producto
 async function actualizarProducto(req, res) {
-    const { id } = req.params;
+    
+    const { id } = req.params; // Asegúrate de que `id` sea un número
     const { nombre, descripcion, precio, cantidad_stock } = req.body;
+
+    // Validación básica
+    if (!nombre || !descripcion || typeof precio !== 'number' || typeof cantidad_stock !== 'number') {
+        return res.status(400).json({ error: 'Datos de producto inválidos' });
+    }
 
     try {
         // Verificar si el producto existe
@@ -82,8 +88,9 @@ async function actualizarProducto(req, res) {
         const query = `
             UPDATE productos
             SET nombre = $1, descripcion = $2, precio = $3, cantidad_stock = $4, fechaedicion = CURRENT_TIMESTAMP
-            WHERE id = $6
+            WHERE id = $5
             RETURNING *`;
+
         const values = [nombre, descripcion, precio, cantidad_stock, id];
 
         const result = await db.query(query, values);
@@ -94,6 +101,10 @@ async function actualizarProducto(req, res) {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
+
+
+
+
 
 // Eliminar un producto
 async function eliminarProducto(req, res) {
