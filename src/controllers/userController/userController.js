@@ -1,7 +1,7 @@
 const db = require('../../../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('../../config')
+const config = require('../../config');
 
 // Controlador para guardar un usuario en la tabla usuarios
 async function guardarUsuario(req, res) {
@@ -67,12 +67,14 @@ async function loginUsuario(req, res) {
     if (!esValida) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
-
     // Generar el token JWT
     const token = jwt.sign({ id: usuario.id, correo: usuario.correo }, config.jwtSecret, { expiresIn: '1h' });
 
     // Devolver el token y los datos del usuario
     res.status(200).json({ token, usuario: { nombre: usuario.nombre, correo: usuario.correo, id: usuario.id } });
+
+    console.log(usuario.nombre);
+
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
