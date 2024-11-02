@@ -1,6 +1,5 @@
 const db = require('../../../db');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const config = require('../../config');
 
 // Controlador para guardar un usuario en la tabla usuarios
@@ -53,7 +52,7 @@ async function loginUsuario(req, res) {
 
   try {
     // Verificar si el usuario existe
-    const query = 'SELECT * FROM usuarios WHERE correo = $1';
+    const query = 'SELECT nombre, correo, password, id FROM usuarios WHERE correo = $1';
     const result = await db.query(query, [email]);
 
     if (result.rows.length === 0) {
@@ -67,11 +66,9 @@ async function loginUsuario(req, res) {
     if (!esValida) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
-    // Generar el token JWT
-    const token = jwt.sign({ id: usuario.id, correo: usuario.correo }, config.jwtSecret, { expiresIn: '1h' });
 
     // Devolver el token y los datos del usuario
-    res.status(200).json({ token, usuario: { nombre: usuario.nombre, correo: usuario.correo, id: usuario.id } });
+    res.status(200).json({nombre: usuario.nombre, correo: usuario.correo, id: usuario.id });
 
     console.log(usuario.nombre);
 
