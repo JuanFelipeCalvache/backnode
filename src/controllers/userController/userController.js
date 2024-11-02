@@ -7,7 +7,7 @@ async function guardarUsuario(req, res) {
   console.log(req.body); // Imprimir el cuerpo de la solicitud para depuración
 
   
-  const { nombre, correo, password, cedula, telefono, creadoPor, editadoPor, aceptaterminos } = req.body;
+  const { nombre, correo, password, cedula, telefono, creadoPor, editadoPor, aceptaterminos, rol } = req.body;
   
   
   try {
@@ -31,10 +31,10 @@ async function guardarUsuario(req, res) {
 
     // Insertar el nuevo usuario
     const query = `INSERT INTO usuarios 
-      (nombre, correo, password, cedula, telefono, creadoPor, editadoPor, aceptaterminos) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      (nombre, correo, password, cedula, telefono, creadoPor, editadoPor, aceptaterminos, rol) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
       RETURNING *`;
-    const values = [nombre, correo, hashedPassword, cedula, telefono, creadoPor, editadoPor, aceptaterminos];
+    const values = [nombre, correo, hashedPassword, cedula, telefono, creadoPor, editadoPor, aceptaterminos, rol];
     
     const result = await db.query(query, values);
 
