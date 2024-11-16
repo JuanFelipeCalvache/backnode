@@ -3,7 +3,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'sistemaInventarioBD',
-  password: 'Temporal.01',
+  password: '123456789',
   port: 5432, 
 });
 //123456789 contraseña vieja

@@ -47,36 +47,42 @@ async function guardarUsuario(req, res) {
 
 
 // Controlador para iniciar sesión (Login)
-async function loginUsuario(req, res) {
-  const { email, password } = req.body;
-
+// Controlador para iniciar sesión (Login)
+const loginUsuario = async (req, res) => {
   try {
-    // Verificar si el usuario existe
-    const query = 'SELECT nombre, correo, password, id FROM usuarios WHERE correo = $1';
-    const result = await db.query(query, [email]);
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Faltan credenciales' });
+    }
 
+    // Consulta SQL para encontrar el usuario por email
+    const query = 'SELECT * FROM usuarios WHERE correo = $1';
+    const result = await db.query(query, [email]);
+    
     if (result.rows.length === 0) {
-      return res.status(400).json({ error: 'Usuario no encontrado' });
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
     const usuario = result.rows[0];
 
     // Verificar la contraseña
-    const esValida = await bcrypt.compare(password, usuario.password);
-    if (!esValida) {
+    const esValido = await bcrypt.compare(password, usuario.password);
+    if (!esValido) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
 
-    // Devolver el token y los datos del usuario
-    res.status(200).json({nombre: usuario.nombre, correo: usuario.correo, id: usuario.id });
-
-    console.log(usuario.nombre);
-
+    // Si la contraseña es válida, devolver los datos del usuario
+    return res.json({
+      nombre: usuario.nombre,
+      email: usuario.correo,
+    });
   } catch (error) {
-    console.error('Error al iniciar sesión:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error("Error durante el inicio de sesión:", error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
-}
+};
+
+
 
 
 
