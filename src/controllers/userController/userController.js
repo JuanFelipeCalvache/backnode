@@ -75,6 +75,7 @@ const loginUsuario = async (req, res) => {
     return res.json({
       nombre: usuario.nombre,
       email: usuario.correo,
+      id: usuario.id,
     });
   } catch (error) {
     console.error("Error durante el inicio de sesión:", error);

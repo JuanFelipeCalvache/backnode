@@ -1,4 +1,14 @@
-const db = require('../../db'); // Asegúrate de que tu conexión a la base de datos esté configurada
+const db = require('../../db');
+const Joi = require('joi');
+
+// Esquema de validación
+const productoSchema = Joi.object({
+    nombre: Joi.string().required(),
+    descripcion: Joi.string().required(),
+    precio: Joi.number().positive().required(),
+    cantidad_stock: Joi.number().integer().min(0).required()
+});
+
 
 // Controlador para guardar un producto
 async function guardarProducto(req, res) {
